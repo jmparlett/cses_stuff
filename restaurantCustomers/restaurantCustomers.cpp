@@ -26,14 +26,84 @@ void setio(string s){
 	// cin now reads from the input file instead of standard input
 }
 
+typedef struct {
+  int a;
+  int b;
+} person;
 
-int main(){
-  setio("problemName");
-
-
+bool atime(person p1, person p2){
+  return p1.a < p2.a;
 }
 
+bool ltime(person p1, person p2){
+  return p1.b < p2.b;
+}
+
+int main(){
+
+  int n; cin >> n;
+
+  vector<person> A; A.resize(n);
+  vector<person> L; L.resize(n);
+
+  for(int i=0; i < n; i++){
+    cin >> A[i].a;
+    cin >> A[i].b;
+    L[i] = A[i];
+  }
+
+  //sort A by arrival time
+  sort(all(A), atime);
+  //sort L by leaving time
+  sort(all(L), ltime);
+
+  int c, m; c = m = 0;
+  int i,j; i = j = 0;
+  for(; i < n; i++){
+    while(A[i].a > L[j].b){
+      c--;
+      j++;
+    }
+    c++;
+    m = max(c,m);
+  }
+  cout << m << endl;
+}
+
+
+/* NEW PLAN (totally gonna work)
+ 
+  Have a person struct which stores the starting and leaving time.
+
+  Have 2 arrays that hold the structs
+
+  sort A by leaving time and L by arrival time
+
+  set i = j = 0; i = A ptr, j = L ptr;
+
+  maxC = 0 -> max customer count
+
+  cur = 0 -> current customer count
+
+  So in the first array we now have customers ordered by arrival
+  and in the second we have them ordered by departure.
+
+  We can view A[i].a as the "current time"
+
+  if L[j].b < A[i].a then that customer has left
+ 
+  So step through array A
+    if A[i].a > L[j].b then
+    maxC = max(maxC, cur)
+    while(A[i].a > L[j].b) cur--;
+    else cur++;
+
+*/
+
 /*
+ *
+ *
+ * of all of that was a terrible idea
 
    If someone arrived before you left than the count increases.
     If someone arrived before they left then the count increases.
